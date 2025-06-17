@@ -98,18 +98,22 @@
     const result = document.getElementById("result");
 
     searchInput.addEventListener("input", () => {
-      const input = searchInput.value.trim().toLowerCase();
-      const info = keyMap[input];
+      const inputRaw = searchInput.value.trim();
+      const input = inputRaw.toLowerCase();
+      let info = keyMap[inputRaw];
+      if (!info) {
+        info = keyMap[input];
+      }
       if (info) {
         const parts = [];
         if (info.shift) parts.push('<span class="key shift">Shift</span>');
         if (info.fn) parts.push('<span class="key fn">Fn</span>');
-        parts.push(<span class="key">${info.key}</span>);
+        parts.push(`<span class="key">${info.key}</span>`);
 
-        result.innerHTML = 
+        result.innerHTML = `
           <div class="key-info">「${searchInput.value}」は ${parts.join(" + ")} のキーにあります。</div>
-          ${info.position ? <div class="position">位置の目安：${info.position}</div> : ""}
-        ;
+          ${info.position ? `<div class="position">位置の目安：${info.position}</div>` : ""}
+        `;
       } else {
         result.innerHTML = "<div class='key-info'>そのキーはまだ登録されていません。</div>";
       }
